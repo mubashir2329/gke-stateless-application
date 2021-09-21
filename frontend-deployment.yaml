@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: frontend
+  labels:
+    app: guestbook
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: guestbook
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: guestbook
+        tier: frontend
+    spec:
+      containers:
+      - name: guestbook
+        image: gcr.io/google-samples/gb-frontend:v4
+        resources:
+          requests: # minimum resources required for the pod, you can set maximum resources using limits: 
+            cpu: 100m 
+            memory: 100Mi
+        env: # set env to tell redis to use kubernetes own dns to look for master pod
+        - name: GET_HOSTS_FROM
+          value: dns
+        ports:
+        - containerPort: 80
+    
